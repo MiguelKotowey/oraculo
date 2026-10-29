@@ -1,0 +1,9 @@
+{
+  "name": "oraculo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ingerir": "node scripts/ingerir-rmt.cjs",
+    "sugerir": "node scripts/sugerir-preco.cjs"
+  }
+}
