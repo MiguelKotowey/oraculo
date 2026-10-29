@@ -95,10 +95,18 @@ status-base da espécie (mecânica paga em pedras, custo total pra +N = `500×N�
 fórmula completa em `C:\git\pokememe\Formulas e Numeros-chave.md`, fora deste repo). O
 refino soma na base antes de IV e multiplicadores, então empurra a nota pra cima.
 
-Potência P3+ é rara, mas uma nota de nascimento abaixo de ~3,5 (o piso de vendabilidade
-observado nos dados — abaixo disso o mercado trata como baixa qualidade mesmo em
-potência rara) deixa esse valor "preso": o pokémon vende pelo preço de nota baixa
-mesmo sendo estruturalmente raro. `scripts/sugerir-preco.cjs` avisa quando isso
-acontece (`potencia >= 3 && nota < 3.5`), mas só sinaliza — não calcula custo de
-refino nem simula se compensa (depende de mecânica que o pokeidle entende melhor;
-fica como próximo passo se/quando fizer sentido).
+Potência P3+ é rara, mas uma nota de nascimento abaixo de 3,5 deixa esse valor "preso":
+**regra dura do próprio jogo, não padrão de mercado** — o RMT nem deixa anunciar
+pokémon com nota < 3,5 (shiny/P5/lendário são exceção, entram mesmo abaixo disso). É
+por isso que o histórico nunca tem nota < 3,5 pra essas espécies: ninguém conseguiu
+anunciar, não é que ninguém quis.
+
+`scripts/sugerir-preco.cjs` avisa quando `potencia >= 3 && nota < 3.5`, mas isso é
+**residual/informativo** — na prática o script é chamado com a nota de um anúncio real
+do RMT, que por definição já passou do piso, então o aviso quase nunca dispara no fluxo
+normal. O fluxo que importa de verdade é do lado do pokeidle: eles levantam candidatos
+na Coleção (nota < 3,5, potência P3+) que um refino baratinho destravaria pra venda;
+depois de simular a nota pós-refino, roda-se `sugerir-preco.cjs` normal com a nota
+projetada pra saber se o preço de venda esperado compensa o custo de pedra/gema do
+refino. Essa ponte (simulação de refino → chamada ao oráculo) não está implementada
+aqui — é trabalho futuro do lado de quem simula o refino, não deste repo.

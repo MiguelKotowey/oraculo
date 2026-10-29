@@ -39,7 +39,9 @@ Sugere faixa de preço pra um Pokémon específico, olhando os comparáveis mais
 vez da mediana geral da espécie, que mistura potências e notas muito diferentes.
 Opcional: `--shiny`, `--k N` (quantos comparáveis usar, padrão 5). Se a ficha tiver
 potência P3+ com nota abaixo de 3,5, o script avisa que pode valer refinar antes de
-vender — ver regra de negócio em [`CONTRATO-INGESTAO.md`](./CONTRATO-INGESTAO.md).
+vender — aviso residual (RMT não deixa anunciar abaixo desse piso, então só é útil pra
+uma nota pré-refino projetada), regra completa em
+[`CONTRATO-INGESTAO.md`](./CONTRATO-INGESTAO.md).
 
 ## Limitações conhecidas / próximo passo
 
