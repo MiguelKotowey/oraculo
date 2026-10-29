@@ -73,6 +73,10 @@ function main() {
     console.log(`  nota ${c.nota} -> ${c.precoGemas} gemas (${c.dataSnapshot}, ${c.vendedor}, na feira ${c.naFeiraDias}d)`);
   }
   console.log(`\nFaixa sugerida: ${Math.min(...precos)}–${Math.max(...precos)} gemas (mediana dos comparáveis: ${mediana(precos)})`);
+
+  if (potencia >= 3 && nota < 3.5) {
+    console.log('\nAviso: potência P3+ com nota abaixo de 3,5 — considerar refino (gastar pedras pra subir status-base) antes de vender. Potência rara com nota baixa costuma deixar valor na mesa (ver CONTRATO-INGESTAO.md).');
+  }
 }
 
 main();

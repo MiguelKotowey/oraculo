@@ -37,7 +37,9 @@ node scripts/sugerir-preco.cjs --especie "Pinsir" --potencia 3 --nota 3.528
 Sugere faixa de preço pra um Pokémon específico, olhando os comparáveis mais próximos
 (mesma espécie + mesma potência + nota parecida) em todo o histórico já importado — em
 vez da mediana geral da espécie, que mistura potências e notas muito diferentes.
-Opcional: `--shiny`, `--k N` (quantos comparáveis usar, padrão 5).
+Opcional: `--shiny`, `--k N` (quantos comparáveis usar, padrão 5). Se a ficha tiver
+potência P3+ com nota abaixo de 3,5, o script avisa que pode valer refinar antes de
+vender — ver regra de negócio em [`CONTRATO-INGESTAO.md`](./CONTRATO-INGESTAO.md).
 
 ## Limitações conhecidas / próximo passo
 

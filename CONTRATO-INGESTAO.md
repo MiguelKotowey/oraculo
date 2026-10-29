@@ -87,3 +87,18 @@ Mesmos nomes/tipos de campo da listagem (`especie`, `potencia`, `nota`, `qualida
 (derivado das duas, guardado pronto pra não recalcular toda hora). `observacao` é
 texto livre opcional. Se um dia a raspagem do "Histórico de vendas" dentro do jogo for
 automatizada, ela deve gerar exatamente esse formato — nenhum campo novo necessário.
+
+## Regra de negócio: potência alta + nota baixa pode valer refinar antes de vender
+
+Descoberta de 2026-10-29: dá pra aumentar a `nota` de um pokémon "refinando" o
+status-base da espécie (mecânica paga em pedras, custo total pra +N = `500×N³` pedras —
+fórmula completa em `C:\git\pokememe\Formulas e Numeros-chave.md`, fora deste repo). O
+refino soma na base antes de IV e multiplicadores, então empurra a nota pra cima.
+
+Potência P3+ é rara, mas uma nota de nascimento abaixo de ~3,5 (o piso de vendabilidade
+observado nos dados — abaixo disso o mercado trata como baixa qualidade mesmo em
+potência rara) deixa esse valor "preso": o pokémon vende pelo preço de nota baixa
+mesmo sendo estruturalmente raro. `scripts/sugerir-preco.cjs` avisa quando isso
+acontece (`potencia >= 3 && nota < 3.5`), mas só sinaliza — não calcula custo de
+refino nem simula se compensa (depende de mecânica que o pokeidle entende melhor;
+fica como próximo passo se/quando fizer sentido).
