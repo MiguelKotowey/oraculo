@@ -46,7 +46,7 @@ Campos de cada anúncio:
 | `nota` | number | Decimal, extraído de `"N 3,518"` (vírgula = separador decimal) — é o principal eixo de comparação entre anúncios da mesma espécie+potência |
 | `precoGemas` | number | Inteiro, em gemas (ponto = separador de milhar no texto bruto, se houver) |
 | `vendedor` | string | Nome de quem anunciou |
-| `naFeiraDias` | number \| null | Tempo que o anúncio já está ativo, convertido pra dias (ex: `"Na feira: 1d"` → `1`) |
+| `naFeiraDias` | number \| null | **Contagem regressiva**, não tempo decorrido — dias que faltam até o anúncio expirar e o pokémon voltar sozinho pro Depot (teto 30, pensão da feira é paga por dias escolhidos no anúncio). Convertido de `"Na feira: 1d"` → `1`. Ver limitação abaixo antes de usar isso pra inferir venda. |
 | `retido` | boolean | `true` = alguém comprando agora, preço não é estável — recomendação de preço deve ignorar |
 | `shiny` | boolean | Shiny não segue a mesma curva de preço por nota — nunca misturar com não-shiny na mesma análise |
 
@@ -61,6 +61,31 @@ Regras pra quem for escrever um novo importador:
 - **Preço e nota sempre numéricos**, nunca a string crua com rótulo embutido
   (`"N 3,650"`, `"IV 113"`) — isso é o problema que esse contrato resolve.
 - Se um anúncio não tiver preço ou nota, descarte (não dá pra comparar).
+
+## Limitação conhecida: desaparecer de um snapshot pro outro NÃO comprova venda
+
+`naFeiraDias` é contagem regressiva até expirar (teto 30), não tempo desde que foi
+anunciado. Consequência: um anúncio que desaparece entre dois snapshots pode ter
+**vendido**, ou simplesmente **expirado** (bateu o teto e voltou pro Depot sozinho,
+sem ninguém comprar) — os dois casos são indistinguíveis só com os campos de hoje.
+
+Regra pra qualquer análise que use isso: só trate um desaparecimento como indício de
+venda/retirada real se, na última observação, `naFeiraDias` ainda fosse **maior** que
+os dias corridos até o próximo snapshot (ou seja, o prazo pra expirar ainda não tinha
+batido quando o anúncio desapareceu — expiração natural está descartada). Se
+`naFeiraDias` já estava baixo (perto de 0) na última observação, o desaparecimento é
+**inconclusivo** e não deve entrar como evidência de venda em nenhuma análise de preço.
+
+O inverso continua válido e não depende dessa ambiguidade: um anúncio que permanece
+ativo em snapshots sucessivos com `naFeiraDias` decrescendo de forma consistente com os
+dias corridos (confirma que é a mesma oferta contínua, não um relist) é evidência sólida
+de "não vendeu em pelo menos N dias reais" — isso não precisa do Histórico de vendas pra
+ser confiável.
+
+Sem o Histórico de vendas real (dentro do jogo, por conta — ver README) pra confirmar
+venda de fato, qualquer leitura de "caro vs ilíquido" baseada só em `data/listings/`
+fica limitada a essas duas evidências válidas (permanência confirmada, e corte de preço
+explícito num anúncio ainda ativo) — nunca em desaparecimento isolado.
 
 ## Venda realizada (ground truth, preenchido manualmente por enquanto)
 
